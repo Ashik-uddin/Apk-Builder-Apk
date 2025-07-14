@@ -91,10 +91,6 @@
             0% { transform: rotate(0deg);}
             100% { transform: rotate(360deg);}
         }
-
-        .ad-banner {
-            margin-top: 10px;
-        }
     </style>
 </head>
 <body>
@@ -102,16 +98,15 @@
     <div class="card">
         <h2>📦 Flutter APK Builder</h2>
         <input type="file" id="fileInput" accept=".zip"><br>
-        <button onclick="sendToTelegram()">🚀 Upload & Send</button>
+        <button onclick="sendToTelegram()">🚀 Upload & Send to Telegram</button>
         <div id="status"></div>
     </div>
 
-    <!-- ✅ Adsterra Banner Ad Placeholder -->
+    <!-- ✅ Adsterra Banner Ad Integration -->
     <div class="ad-banner">
-        <!-- Replace with your Adsterra banner code -->
         <script type="text/javascript">
             atOptions = {
-                'key' : 'YOUR_ADSTERRA_KEY_HERE',
+                'key' : 'YOUR_ADSTERRA_KEY',
                 'format' : 'banner',
                 'height' : 60,
                 'width' : 468,
@@ -136,8 +131,9 @@
             const formData = new FormData();
             formData.append('document', file);
 
-            const botToken = '7999855523:AAHVK-q11x5sKRgOuTd5i1K_bUmRITnxckE';
-            const chatId = '1002702176647';
+            // ⛔ This token is incomplete. Replace with full bot token
+            const botToken = '901338916:YOUR_FULL_BOT_TOKEN';
+            const chatId = '6185337017';
 
             status.innerHTML = '<div class="loader"></div> Uploading...';
 
