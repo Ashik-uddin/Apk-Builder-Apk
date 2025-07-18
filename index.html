@@ -3,156 +3,322 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flutter APK Builder</title>
+    <title>Flutter APK Builder Bot Interface</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Roboto:wght@400;500;700&display=swap');
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Poppins', sans-serif;
+        :root {
+            --primary-color: #007BFF;
+            --primary-hover: #0056b3;
+            --bg-color: #121212;
+            --surface-color: #1e1e1e;
+            --text-color: #e0e0e0;
+            --text-muted: #888;
+            --console-bg: #000;
+            --success-color: #28a745;
+            --error-color: #dc3545;
+            --border-color: #333;
         }
 
         body {
-            height: 100vh;
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
             display: flex;
             justify-content: center;
             align-items: center;
-            flex-direction: column;
-            background: linear-gradient(135deg, #00c6ff, #0072ff);
-            color: white;
-            text-align: center;
-            position: relative;
+            min-height: 100vh;
         }
 
-        .card {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 30px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-            max-width: 400px;
-            width: 90%;
-            margin-bottom: 20px;
-        }
-
-        h2 {
-            margin-bottom: 20px;
-            font-weight: 600;
-        }
-
-        input[type="file"] {
-            padding: 10px;
-            background: #fff;
-            color: #333;
-            border-radius: 8px;
-            border: none;
+        .container {
             width: 100%;
-            margin: 15px 0;
+            max-width: 800px;
+            background-color: var(--surface-color);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            padding: 30px;
+            border: 1px solid var(--border-color);
         }
 
-        button {
-            background: #ff416c;
-            background: linear-gradient(to right, #ff4b2b, #ff416c);
-            border: none;
-            border-radius: 50px;
-            padding: 12px 30px;
-            font-size: 16px;
-            color: white;
+        header h1 {
+            font-size: 2em;
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 10px;
+            font-family: 'Roboto', sans-serif;
+            font-weight: 700;
+        }
+
+        header p {
+            text-align: center;
+            color: var(--text-muted);
+            margin-bottom: 30px;
+        }
+
+        .upload-section {
+            text-align: center;
+            border: 2px dashed var(--border-color);
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 30px;
             cursor: pointer;
-            transition: 0.3s ease;
-            margin-top: 10px;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+        
+        .upload-section:hover {
+            background-color: rgba(0, 123, 255, 0.05);
+            border-color: var(--primary-color);
         }
 
-        button:hover {
-            transform: scale(1.05);
-            background: linear-gradient(to right, #ff416c, #ff4b2b);
+        .upload-section input[type="file"] {
+            display: none;
         }
 
-        #status {
+        .upload-section label {
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        #file-name {
+            display: block;
+            margin-top: 15px;
+            color: var(--success-color);
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        #build-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            font-size: 1.2em;
+            font-weight: 700;
+            color: white;
+            background-color: var(--primary-color);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+        }
+
+        #build-btn:hover {
+            background-color: var(--primary-hover);
+        }
+
+        #build-btn:active {
+            transform: scale(0.98);
+        }
+        
+        #build-btn:disabled {
+            background-color: #555;
+            cursor: not-allowed;
+        }
+
+        .output-section {
+            margin-top: 30px;
+        }
+
+        .output-section h3 {
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        #console-output {
+            background-color: var(--console-bg);
+            color: #f0f0f0;
+            font-family: 'Roboto Mono', monospace;
+            padding: 20px;
+            border-radius: 8px;
+            height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-size: 0.9em;
+            border: 1px solid var(--border-color);
+        }
+        
+        .console-line {
+            display: block;
+        }
+        .console-line.command { color: #87CEEB; }
+        .console-line.success { color: var(--success-color); }
+        .console-line.error { color: var(--error-color); }
+        .console-line.info { color: #f0f0f0; }
+
+        .result-section {
             margin-top: 20px;
-            font-weight: bold;
-            min-height: 30px;
-            transition: 0.3s ease;
+            text-align: center;
+            display: none; /* Initially hidden */
         }
 
-        .loader {
-            border: 5px solid rgba(255,255,255,0.3);
-            border-top: 5px solid #fff;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 15px auto;
+        #download-link {
+            display: inline-block;
+            padding: 12px 25px;
+            font-size: 1em;
+            font-weight: 500;
+            color: white;
+            background-color: var(--success-color);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background-color 0.3s;
         }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg);}
-            100% { transform: rotate(360deg);}
+        
+        #download-link:hover {
+            background-color: #218838;
         }
     </style>
 </head>
 <body>
 
-    <div class="card">
-        <h2>📦 Flutter APK Builder</h2>
-        <input type="file" id="fileInput" accept=".zip"><br>
-        <button onclick="sendToTelegram()">🚀 Upload & Send to Telegram</button>
-        <div id="status"></div>
-    </div>
+    <div class="container">
+        <header>
+            <h1>Flutter APK Builder Bot</h1>
+            <p>Upload your Flutter project's .zip file to build the release APK.</p>
+        </header>
 
-    <!-- ✅ Adsterra Banner Ad Integration -->
-    <div class="ad-banner">
-        <script type="text/javascript">
-            atOptions = {
-                'key' : 'YOUR_ADSTERRA_KEY',
-                'format' : 'banner',
-                'height' : 60,
-                'width' : 468,
-                'params' : {}
-            };
-            document.write('<scr' + 'ipt type="text/javascript" src="//www.profitabledisplaynetwork.com/' + atOptions.key + '/invoke.js"></scr' + 'ipt>');
-        </script>
+        <main>
+            <div class="upload-section" id="drop-zone">
+                <input type="file" id="project-zip" accept=".zip">
+                <label for="project-zip">Click to select or drop your .zip file here</label>
+                <span id="file-name"></span>
+            </div>
+
+            <button id="build-btn" disabled>Build APK</button>
+
+            <div class="output-section">
+                <h3>Build Log</h3>
+                <div id="console-output">
+                    <span class="console-line info">Waiting for project file...</span>
+                </div>
+            </div>
+
+            <div class="result-section" id="result-section">
+                <a href="#" id="download-link" download="app-release.apk">Download APK</a>
+            </div>
+        </main>
     </div>
 
     <script>
-        async function sendToTelegram() {
-            const fileInput = document.getElementById('fileInput');
-            const status = document.getElementById('status');
-            status.innerHTML = '';
+        document.addEventListener('DOMContentLoaded', () => {
+            const projectZipInput = document.getElementById('project-zip');
+            const fileNameDisplay = document.getElementById('file-name');
+            const buildBtn = document.getElementById('build-btn');
+            const consoleOutput = document.getElementById('console-output');
+            const resultSection = document.getElementById('result-section');
+            const downloadLink = document.getElementById('download-link');
+            const dropZone = document.getElementById('drop-zone');
 
-            if (!fileInput.files.length) {
-                alert('⚠️ Please select a Flutter Project ZIP file.');
-                return;
+            let selectedFile = null;
+
+            // Handle file selection via click
+            dropZone.addEventListener('click', () => projectZipInput.click());
+            
+            // Handle file drop
+            dropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropZone.style.borderColor = 'var(--primary-color)';
+            });
+            dropZone.addEventListener('dragleave', (e) => {
+                e.preventDefault();
+                dropZone.style.borderColor = 'var(--border-color)';
+            });
+            dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropZone.style.borderColor = 'var(--border-color)';
+                if (e.dataTransfer.files.length) {
+                    const file = e.dataTransfer.files[0];
+                    if (file.name.endsWith('.zip')) {
+                        handleFileSelect(file);
+                    } else {
+                        alert('Please upload a .zip file.');
+                    }
+                }
+            });
+
+
+            projectZipInput.addEventListener('change', (event) => {
+                if (event.target.files.length > 0) {
+                    handleFileSelect(event.target.files[0]);
+                }
+            });
+
+            function handleFileSelect(file) {
+                selectedFile = file;
+                fileNameDisplay.textContent = `Selected: ${selectedFile.name}`;
+                buildBtn.disabled = false;
+                clearConsole();
+                addConsoleLine('Project file selected. Ready to build.', 'info');
+                resultSection.style.display = 'none';
             }
 
-            const file = fileInput.files[0];
-            const formData = new FormData();
-            formData.append('document', file);
+            buildBtn.addEventListener('click', () => {
+                if (!selectedFile) {
+                    alert('Please select a project file first!');
+                    return;
+                }
+                
+                // --- THIS IS A SIMULATION ---
+                // In a real application, you would send the 'selectedFile' to your backend server here.
+                // Example using fetch:
+                // const formData = new FormData();
+                // formData.append('project', selectedFile);
+                // fetch('/build', { method: 'POST', body: formData })
+                //   .then(response => response.json())
+                //   .then(data => { /* Handle real server response */ });
 
-            // ⛔ This token is incomplete. Replace with full bot token
-            const botToken = '901338916:YOUR_FULL_BOT_TOKEN';
-            const chatId = '6185337017';
+                simulateBuildProcess();
+            });
 
-            status.innerHTML = '<div class="loader"></div> Uploading...';
+            function clearConsole() {
+                consoleOutput.innerHTML = '';
+            }
 
-            try {
-                const response = await fetch(`https://api.telegram.org/bot${botToken}/sendDocument?chat_id=${chatId}`, {
-                    method: 'POST',
-                    body: formData
+
+
+            function addConsoleLine(text, type = 'info') {
+                const line = document.createElement('span');
+                line.className = `console-line ${type}`;
+                line.textContent = `> ${text}`;
+                consoleOutput.appendChild(line);
+                consoleOutput.scrollTop = consoleOutput.scrollHeight; // Auto-scroll
+            }
+
+            function simulateBuildProcess() {
+                buildBtn.disabled = true;
+                resultSection.style.display = 'none';
+                clearConsole();
+
+                const steps = [
+                    { text: 'Build process started...', delay: 500, type: 'info' },
+                    { text: `Uploading ${selectedFile.name}...`, delay: 1000, type: 'info' },
+                    { text: 'Upload complete. Unzipping project on server...', delay: 1500, type: 'info' },
+                    { text: '$ flutter pub get', delay: 2000, type: 'command' },
+                    { text: 'Resolving dependencies... (This may take a while)', delay: 4000, type: 'info' },
+                    { text: 'Dependencies resolved successfully.', delay: 1000, type: 'success' },
+                    { text: '$ flutter build apk --release', delay: 1500, type: 'command' },
+                    { text: '✓ Built build/app/outputs/flutter-apk/app-release.apk (25.4MB).', delay: 5000, type: 'success' },
+                    { text: 'Build successful! Preparing download link...', delay: 1000, type: 'success' },
+                ];
+
+                let totalDelay = 0;
+                steps.forEach(step => {
+                    totalDelay += step.delay;
+                    setTimeout(() => {
+                        addConsoleLine(step.text, step.type);
+                    }, totalDelay);
                 });
 
-                if (response.ok) {
-                    status.innerHTML = '✅ File sent to Telegram Bot successfully!';
-                } else {
-                    status.innerHTML = '❌ Failed to send file. Check bot token and chat ID.';
-                }
-            } catch (err) {
-                status.innerHTML = '❌ Error: ' + err.message;
+                // After simulation is complete
+                setTimeout(() => {
+                    buildBtn.disabled = false;
+                    resultSection.style.display = 'block';
+                    downloadLink.href = '#'; // In a real app, this would be the actual download URL
+                    addConsoleLine('APK is ready for download.', 'info');
+                }, totalDelay + 500);
             }
-        }
+        });
     </script>
-
 </body>
 </html>
